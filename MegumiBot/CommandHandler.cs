@@ -7,7 +7,7 @@ using MegumiBot.Core.Accounts;
 
 namespace MegumiBot
 {
-
+	// Written by Petrspelos
 	public class CommandHandler
 	{
 		DiscordSocketClient _client;
