@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MegumiBot
 {
-	// Written by Petrspelos
+
 	class Config
 	{
 		private const string ConfigFolder = "Resources";
