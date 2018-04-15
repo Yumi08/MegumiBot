@@ -55,12 +55,9 @@ namespace MegumiBot.Modules
 			}
 		}
 
-		[Command("dump")]
-		[Alias("trash")]
+		[Command("dump", RunMode = RunMode.Async)]
 		public async Task Dump(uint amt)
 		{
-			if (amt == 0) return;
-
 			var userAccount = UserAccounts.GetAccount(Context.User);
 
 			if (userAccount.Currency < amt)
@@ -70,7 +67,18 @@ namespace MegumiBot.Modules
 				return;
 			}
 
+			var response = await Global.AwaitYesNoMessage(Context.User.Id, Context.Channel.Id, 5000);
 
+			switch (response)
+			{
+				case true:
+					await Context.Channel.SendMessageAsync($"Throwing away {Config.bot.CurrencySymbol}{amt}!");
+					userAccount.Currency -= amt;
+					break;
+				case false:
+					await Context.Channel.SendMessageAsync("Cancelled!");
+					break;
+			}
 		}
 	}
 }

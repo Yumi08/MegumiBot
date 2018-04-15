@@ -37,6 +37,7 @@ namespace MegumiBot.Modules
 
 		// This command is VERY important in order to save accounts on exit
 		[Command("exit")]
+		[Alias("close")]
 		// RequireOwner will obviously have to be changed later on to whoever's running the bot
 		[RequireOwner]
 		public async Task Exit()
@@ -50,12 +51,12 @@ namespace MegumiBot.Modules
 		[Command("respond", RunMode = RunMode.Async)]
 		public async Task Respond()
 		{
-			var response = await Global.AwaitMessage(Context, 5000);
+			var response = await Global.AwaitMessage(Context.User.Id, Context.Channel.Id, 5000);
 
 			if (response == null)
-				await Context.Channel.SendMessageAsync("You said nothing!");
+				await Context.Channel.SendMessageAsync("Cancelling...");
 			else
-				switch (response.ToLower())
+				switch (response.Content.ToLower())
 				{
 					case "y":
 						await Context.Channel.SendMessageAsync("You said yes!");
