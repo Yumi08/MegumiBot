@@ -8,6 +8,8 @@ namespace MegumiBot.Core.GuildAccounts
 	{
 		public ulong Id { get; set; }
 
+		public string Prefix { get; set; } = null;
+
 		public List<GuildChannel> Channels { get; set; }= new List<GuildChannel>();
 
 		public GuildChannel GetChannel(IChannel channel)

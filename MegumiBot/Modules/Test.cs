@@ -170,9 +170,11 @@ namespace MegumiBot.Modules
 			}
 		}
 
+		// Debug command
 		[Command("currencyset")]
-		public void CurrencySet(uint value)
+		public async Task CurrencySet(uint value)
 		{
+			await Context.Channel.SendMessageAsync($"Setting your currency to {Config.bot.CurrencySymbol}{value}!");
 			UserAccounts.GetAccount(Context.User).Currency = value;
 		}
 
@@ -188,6 +190,34 @@ namespace MegumiBot.Modules
 					await Context.Channel.SendMessageAsync(":thumbsdown:");
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Set's the guild's custom prefix
+		/// </summary>
+		/// <returns></returns>
+		[Command("setprefix")]
+		[RequireOwner]
+		public async Task SetPrefix(string prefix)
+		{
+			if (prefix.Length > 4)
+			{
+				await Context.Channel.SendMessageAsync("Prefixes have a maximum of 4 characters in length!");
+				return;
+			}
+
+			Guilds.GetGuild(Context.Guild).Prefix = prefix;
+
+			await Context.Channel.SendMessageAsync($"My command prefix has been set to \"{prefix}\"!");
+		}
+
+		[Command("resetprefix")]
+		[RequireOwner]
+		public async Task ResetPrefix()
+		{
+			Guilds.GetGuild(Context.Guild).Prefix = null;
+
+			await Context.Channel.SendMessageAsync("My command prefix has been reset!");
 		}
 
 		// This command is VERY important in order to save accounts on exit

@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Reflection;
 using MegumiBot.Core;
+using MegumiBot.Core.GuildAccounts;
 
 namespace MegumiBot
 {
@@ -31,7 +32,7 @@ namespace MegumiBot
 			Leveling.MessageReceived(context.User as SocketGuildUser, context.Channel as SocketTextChannel);
 
 			int argPos = 0;
-			if(msg.HasStringPrefix(Config.bot.CmdPrefix, ref argPos) 
+			if(msg.HasStringPrefix(Guilds.GetGuild(context.Guild).Prefix ?? Config.bot.CmdPrefix, ref argPos) 
 			   || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
 			{
 				var result = await _service.ExecuteAsync(context, argPos);
