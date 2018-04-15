@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -39,6 +40,16 @@ namespace MegumiBot.Modules
 			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
 
 			await Context.Channel.SendMessageAsync(searchResult.neko.ToString());
+		}
+
+		[Command("someone")]
+		public async Task Someone()
+		{
+			var users = Context.Guild.Users.Where(u => u.Status == UserStatus.Online).ToList();
+
+			var userIndex = Global.Random.Next(users.Count() + 1);
+
+			await Context.Channel.SendMessageAsync(users[userIndex].Mention);
 		}
 	}
 }
