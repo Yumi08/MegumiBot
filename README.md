@@ -1,2 +1,2 @@
 # MegumiBot
-Bot collab between Carbon and Yumi08
+Bot collab between Carbon003 and Yumi08
