@@ -7,9 +7,9 @@ namespace MegumiBot.Core
 	// Written by Petrspelos
 	public static class DataStorage<T>
 	{
-		public static void SaveItems(IEnumerable<T> accounts, string filePath)
+		public static void SaveItems(IEnumerable<T> items, string filePath)
 		{
-			var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
+			var json = JsonConvert.SerializeObject(items, Formatting.Indented);
 			File.WriteAllText(filePath, json);
 		}
 

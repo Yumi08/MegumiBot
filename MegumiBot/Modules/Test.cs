@@ -7,6 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using MegumiBot.Core.Accounts;
 using MegumiBot.Core.GuildAccounts;
+using MegumiBot.Core.Responses;
 using Newtonsoft.Json;
 using WebClient = System.Net.WebClient;
 
@@ -27,7 +28,7 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync(Context.User.Mention);
 		}
 
-		[Command("mentionguilduser")]
+		[Command("mention")]
 		public async Task Mention(IGuildUser targetGuildUser)
 		{
 			await Context.Channel.SendMessageAsync(targetGuildUser.Mention);
@@ -102,6 +103,7 @@ namespace MegumiBot.Modules
 		}
 
 		[Command("setnsfw")]
+		[RequireUserPermission(GuildPermission.Administrator)]
 		public async Task SetNsfw(IChannel channel)
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
@@ -112,6 +114,7 @@ namespace MegumiBot.Modules
 		}
 
 		[Command("unsetnsfw")]
+		[RequireUserPermission(GuildPermission.Administrator)]
 		public async Task UnsetNsfw(IChannel channel)
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
@@ -138,6 +141,45 @@ namespace MegumiBot.Modules
 			embed.AddInlineField("Messages", userAccount.TotalMessages);
 
 			await Context.Channel.SendMessageAsync("", embed: embed);
+		}
+
+		[Command("bet")]
+		public async Task Bet(uint amt)
+		{
+			if (amt == 0) return;
+
+			var userAccount = UserAccounts.GetAccount(Context.User);
+
+			if (userAccount.Currency < amt)
+			{
+				await Context.Channel.SendMessageAsync(
+					$"Unfortunately, you're {Config.bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
+			}
+
+			userAccount.Currency -= amt;
+
+			switch (Global.Random.Next(2))
+			{
+				case 0:
+					await Context.Channel.SendMessageAsync(ResponseGetter.GetRandomResponse("BetLoss"));
+					break;
+				case 1:
+					await Context.Channel.SendMessageAsync($"Congratulations! You won {Config.bot.CurrencySymbol}{amt * 2}!");
+					userAccount.Currency += amt * 2;
+					break;
+			}
+		}
+
+		[Command("currencyset")]
+		public async Task CurrencySet(uint value)
+		{
+			UserAccounts.GetAccount(Context.User).Currency = value;
+		}
+
+		[Command("testresponse")]
+		public async Task TestResponse(string key)
+		{
+			await Context.Channel.SendMessageAsync(ResponseGetter.GetRandomResponse(key));
 		}
 	}
 }

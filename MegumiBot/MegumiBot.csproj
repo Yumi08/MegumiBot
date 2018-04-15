@@ -189,8 +189,8 @@
     <Compile Include="Core\GuildAccounts\GuildChannel.cs" />
     <Compile Include="Core\GuildAccounts\Guilds.cs" />
     <Compile Include="Core\Leveling.cs" />
+    <Compile Include="Core\Responses\ResponseGetter.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="JsonListReader.cs" />
     <Compile Include="Modules\Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
