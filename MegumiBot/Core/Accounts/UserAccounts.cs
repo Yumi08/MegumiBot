@@ -54,7 +54,6 @@ namespace MegumiBot.Core.Accounts
 			};
 
 			_accounts.Add(newAccount);
-			SaveAccounts();
 			return newAccount;
 		}
 	}

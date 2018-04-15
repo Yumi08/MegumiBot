@@ -17,7 +17,6 @@ namespace MegumiBot.Core
 			userAccount.LastCountedMessageTime = DateTime.Now;
 			var oldLevel = userAccount.LevelNumber;
 			userAccount.Xp += (uint)Global.Random.Next(15, 26);
-			UserAccounts.SaveAccounts();
 
 			if (oldLevel != userAccount.LevelNumber)
 			{

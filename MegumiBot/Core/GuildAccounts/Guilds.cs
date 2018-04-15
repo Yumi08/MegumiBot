@@ -51,7 +51,6 @@ namespace MegumiBot.Core.GuildAccounts
 			};
 
 			_guilds.Add(newAccount);
-			SaveGuilds();
 			return newAccount;
 		}
 	}

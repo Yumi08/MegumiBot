@@ -15,7 +15,6 @@ namespace MegumiBot.Modules
 {
 	public class Test : ModuleBase<SocketCommandContext> //usefull commands should be transfered to the command class when done.
 	{
-
         [Command("echo")]
 		public async Task Echo(string input)
 		{
@@ -60,6 +59,7 @@ namespace MegumiBot.Modules
         }
 
         [Command("warn")]
+		[Priority(1)]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(ChannelPermission.ManageMessages)] // RequireBotPermission isn't completely necessary here.
         public async Task Warn(SocketGuildUser guilduser, [Remainder] string reason)
@@ -109,7 +109,6 @@ namespace MegumiBot.Modules
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
 			guild.GetChannel(channel).IsNsfw = true;
-			Guilds.SaveGuilds();
 
 			await Context.Channel.SendMessageAsync($"#{channel.Name} is now NSFW!");
 		}
@@ -120,7 +119,6 @@ namespace MegumiBot.Modules
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
 			guild.GetChannel(channel).IsNsfw = false;
-			Guilds.SaveGuilds();
 
 			await Context.Channel.SendMessageAsync($"#{channel.Name} is now no longer NSFW!");
 		}
@@ -173,7 +171,7 @@ namespace MegumiBot.Modules
 		}
 
 		[Command("currencyset")]
-		public async Task CurrencySet(uint value)
+		public void CurrencySet(uint value)
 		{
 			UserAccounts.GetAccount(Context.User).Currency = value;
 		}
@@ -190,6 +188,18 @@ namespace MegumiBot.Modules
 					await Context.Channel.SendMessageAsync(":thumbsdown:");
 					break;
 			}
+		}
+
+		// This command is VERY important in order to save accounts on exit
+		[Command("exit")]
+		// RequireOwner will obviously have to be changed later on to whoever's running the bot
+		[RequireOwner]
+		public async Task Exit()
+		{
+			await Context.Channel.SendMessageAsync("Closing down and saving!");
+			await Global.SaveAll();
+
+			Environment.Exit(0);
 		}
 	}
 }
