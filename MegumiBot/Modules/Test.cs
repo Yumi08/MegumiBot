@@ -10,9 +10,10 @@ using WebClient = System.Net.WebClient;
 
 namespace MegumiBot.Modules
 {
-	public class Test : ModuleBase<SocketCommandContext>
+	public class Test : ModuleBase<SocketCommandContext> //usefull commands should be transfered to the command class when done.
 	{
-		[Command("echo")]
+
+        [Command("echo")]
 		public async Task Echo(string input)
 		{
 			await Context.Channel.SendMessageAsync(input);
@@ -72,7 +73,14 @@ namespace MegumiBot.Modules
             await m.DeleteAsync();
         }
 
-
+        [Command("dealwithit")] //Inspired from a Command from an existing Bot
+        public async Task Glasses()
+        {
+            await this.Context.Message.DeleteAsync();
+            var msg = await ReplyAsync("( ͡° ͜ʖ ͡°)>⌐■-■");
+            await Task.Delay(1350);
+            await msg.ModifyAsync(x => { x.Content = "( ͡⌐■ ͜ʖ ͡-■) Deal with it."; });
+        }
 
         [Command("someone")]
 		public async Task Someone()
