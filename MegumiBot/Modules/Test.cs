@@ -154,6 +154,7 @@ namespace MegumiBot.Modules
 			{
 				await Context.Channel.SendMessageAsync(
 					$"Unfortunately, you're {Config.bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
+				return;
 			}
 
 			userAccount.Currency -= amt;
