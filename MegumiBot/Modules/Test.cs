@@ -49,20 +49,25 @@ namespace MegumiBot.Modules
             await Context.Channel.SendMessageAsync("", false, embed);
         }
 
-        [Command("Warn")]
+        [Command("warn")]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task warn(SocketGuildUser guilduser, [Remainder] string reason)
         {
             await this.Context.Message.DeleteAsync();
             string timestamp = System.Convert.ToString(DateTime.Now);
-            var embed = new EmbedBuilder();
-            embed.WithTitle(":warning: Warn");
+            var embed = new EmbedBuilder()
+            {
+				Color = new Color(255, 0, 2),
+				Title = ":warning: Warning",
+				Description = $"Reason: {reason}",
+            };
+
             embed.WithAuthor(Context.Guild.Name);
-            embed.WithDescription("Description :" + reason);
             embed.WithFooter($"Timestamp : {timestamp} UTC-5");
-            embed.WithColor(255, 0, 2);
+
             await guilduser.SendMessageAsync("", false, embed);
+
             var m = await Context.Channel.SendMessageAsync("Success");
             await Task.Delay(1000);
             await m.DeleteAsync();
