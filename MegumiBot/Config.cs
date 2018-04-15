@@ -33,7 +33,7 @@ namespace MegumiBot
 	public struct BotConfig
 	{
 		public string Token;
-		public string CmdPrefix;
+		public string DefaultPrefix;
 		public string CurrencySymbol;
 	}
 }

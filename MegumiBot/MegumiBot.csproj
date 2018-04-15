@@ -152,6 +152,10 @@
     <Compile Include="Core\Leveling.cs" />
     <Compile Include="Core\Responses\ResponseGetter.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Modules\Configuration.cs" />
+    <Compile Include="Modules\Economy.cs" />
+    <Compile Include="Modules\Fun.cs" />
+    <Compile Include="Modules\Moderation.cs" />
     <Compile Include="Modules\Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

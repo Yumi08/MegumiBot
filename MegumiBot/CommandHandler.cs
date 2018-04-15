@@ -32,7 +32,8 @@ namespace MegumiBot
 			Leveling.MessageReceived(context.User as SocketGuildUser, context.Channel as SocketTextChannel);
 
 			int argPos = 0;
-			if(msg.HasStringPrefix(Guilds.GetGuild(context.Guild).Prefix ?? Config.bot.CmdPrefix, ref argPos) 
+			// If the guild prefix hasn't been set, then get the default one
+			if(msg.HasStringPrefix(Guilds.GetGuild(context.Guild).Prefix ?? Config.bot.DefaultPrefix, ref argPos) 
 			   || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
 			{
 				var result = await _service.ExecuteAsync(context, argPos);
