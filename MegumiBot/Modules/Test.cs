@@ -50,43 +50,20 @@ namespace MegumiBot.Modules
 		[Command("respond", RunMode = RunMode.Async)]
 		public async Task Respond()
 		{
-			await Context.Channel.SendMessageAsync("Respond! (Y/N)");
+			var response = await Global.AwaitMessage(Context, 5000);
 
-			bool response;
-			var responses = 0;
-			Context.Client.MessageReceived += OnMessageReceived;
-
-			await Task.Delay(5000);
-
-			if (responses == 0)
-			{
+			if (response == null)
 				await Context.Channel.SendMessageAsync("You said nothing!");
-			}
-
-			Context.Client.MessageReceived -= OnMessageReceived;
-
-			async Task OnMessageReceived(SocketMessage message)
-			{
-				if (message.Author.Id != Context.User.Id ||
-				    message.Channel.Id != Context.Channel.Id)
-					return;
-
-				if (message.Content.ToLower() != "y" && message.Content.ToLower() != "n")
-					return;
-
-				response = Global.CheckYN(message.Content);
-
-				responses += 1;
-
-				await ContinueCommand();
-			}
-
-			async Task ContinueCommand()
-			{
-				if (responses == 0) return;
-				await Context.Channel.SendMessageAsync($"You said {response}!");
-				Context.Client.MessageReceived -= OnMessageReceived;
-			}
+			else
+				switch (response.ToLower())
+				{
+					case "y":
+						await Context.Channel.SendMessageAsync("You said yes!");
+						break;
+					case "n":
+						await Context.Channel.SendMessageAsync("You said no!");
+						break;
+				}
 		}
 	}
 }

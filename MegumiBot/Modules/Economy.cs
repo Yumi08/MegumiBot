@@ -54,5 +54,23 @@ namespace MegumiBot.Modules
 					break;
 			}
 		}
+
+		[Command("dump")]
+		[Alias("trash")]
+		public async Task Dump(uint amt)
+		{
+			if (amt == 0) return;
+
+			var userAccount = UserAccounts.GetAccount(Context.User);
+
+			if (userAccount.Currency < amt)
+			{
+				await Context.Channel.SendMessageAsync(
+					$"Unfortunately, you're {Config.bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
+				return;
+			}
+
+
+		}
 	}
 }
