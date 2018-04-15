@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace MegumiBot.Modules
 {
-	class Fun : ModuleBase<SocketCommandContext>
+	public class Fun : ModuleBase<SocketCommandContext>
 	{
 		// Not actually nsfw, just to test the NSFW checker
 		[Command("neko")]

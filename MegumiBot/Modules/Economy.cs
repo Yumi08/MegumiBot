@@ -67,6 +67,8 @@ namespace MegumiBot.Modules
 				return;
 			}
 
+			await Context.Channel.SendMessageAsync($"Are you sure you want to dump {Config.bot.CurrencySymbol}{amt}? (Y/N)");
+
 			var response = await Global.AwaitYesNoMessage(Context.User.Id, Context.Channel.Id, 5000);
 
 			switch (response)
