@@ -49,7 +49,7 @@ namespace MegumiBot.Core.Accounts
 			var newAccount = new UserAccount()
 			{
 				Id = id,
-				Points = 10,
+				Currency = 10,
 				Xp = 0
 			};
 

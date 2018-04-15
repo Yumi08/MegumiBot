@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 using System.Reflection;
-using MegumiBot.Core.Accounts;
+using MegumiBot.Core;
 
 namespace MegumiBot
 {
@@ -28,13 +28,7 @@ namespace MegumiBot
 			var context = new SocketCommandContext(_client, msg);
 			if (context.User.IsBot) return;
 
-			// Mute check
-			var userAccount = UserAccounts.GetAccount(context.User);
-			if(userAccount.IsMuted)
-			{
-				await context.Message.DeleteAsync();
-				return;
-			}
+			Leveling.MessageReceived(context.User as SocketGuildUser, context.Channel as SocketTextChannel);
 
 			int argPos = 0;
 			if(msg.HasStringPrefix(Config.bot.CmdPrefix, ref argPos) 

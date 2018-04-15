@@ -188,6 +188,7 @@
     <Compile Include="Core\GuildAccounts\Guild.cs" />
     <Compile Include="Core\GuildAccounts\GuildChannel.cs" />
     <Compile Include="Core\GuildAccounts\Guilds.cs" />
+    <Compile Include="Core\Leveling.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="JsonListReader.cs" />
     <Compile Include="Modules\Test.cs" />
@@ -198,5 +199,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

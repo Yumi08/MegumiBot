@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MegumiBot.Core.Accounts;
 using MegumiBot.Core.GuildAccounts;
 using Newtonsoft.Json;
 using WebClient = System.Net.WebClient;
@@ -84,7 +85,7 @@ namespace MegumiBot.Modules
         [Command("dealwithit")]
         public async Task Glasses()
         {
-            await this.Context.Message.DeleteAsync();
+            await Context.Message.DeleteAsync();
             var msg = await ReplyAsync("( ͡° ͜ʖ ͡°)>⌐■-■");
             await Task.Delay(1350);
             await msg.ModifyAsync(x => x.Content = "( ͡⌐■ ͜ʖ ͡-■) Deal with it.");
@@ -118,6 +119,24 @@ namespace MegumiBot.Modules
 			Guilds.SaveGuilds();
 
 			await Context.Channel.SendMessageAsync($"#{channel.Name} is now no longer NSFW!");
+		}
+
+		[Command("profile")]
+		public async Task Profile()
+		{
+			var userAccount = UserAccounts.GetAccount(Context.User);
+
+			var embed = new EmbedBuilder
+			{
+				Title = $"{Global.GetNickname(Context.User as IGuildUser)}'s Profile",
+				Color = new Color(220, 20, 60)
+			};
+
+			embed.AddInlineField("Level", userAccount.LevelNumber);
+			embed.AddInlineField("XP", userAccount.Xp);
+			embed.AddInlineField("Money", userAccount.Currency);
+
+			await Context.Channel.SendMessageAsync("", embed: embed);
 		}
 	}
 }
