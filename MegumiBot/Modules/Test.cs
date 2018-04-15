@@ -37,7 +37,10 @@ namespace MegumiBot.Modules
 			}
 
 			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
-
+            var embed = new EmbedBuilder();
+            embed.WithImageUrl(searchResult.neko.Tostring());
+            embed.WithAuthor("Source : Neko.life");
+            embed.
 			await Context.Channel.SendMessageAsync(searchResult.neko.ToString());
 		}
 	}
