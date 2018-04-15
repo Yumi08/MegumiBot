@@ -41,7 +41,7 @@ namespace MegumiBot.Modules
             var embed = new EmbedBuilder();
             embed.WithImageUrl(searchResult.neko.Tostring());
             embed.WithAuthor("Source : Neko.life");
-            embed.
+            embed.WithColor(255, 0, 255);
 			await Context.Channel.SendMessageAsync(searchResult.neko.ToString());
 		}
 
