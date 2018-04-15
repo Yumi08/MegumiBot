@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -52,10 +52,10 @@ namespace MegumiBot.Modules
         [Command("warn")]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
-        public async Task warn(SocketGuildUser guilduser, [Remainder] string reason)
+        public async Task Warn(SocketGuildUser guilduser, [Remainder] string reason)
         {
-            await this.Context.Message.DeleteAsync();
-            string timestamp = System.Convert.ToString(DateTime.Now);
+            await Context.Message.DeleteAsync();
+            string timestamp = Convert.ToString(DateTime.Now, CultureInfo.InvariantCulture);
             var embed = new EmbedBuilder()
             {
 				Color = new Color(255, 0, 2),
@@ -73,13 +73,14 @@ namespace MegumiBot.Modules
             await m.DeleteAsync();
         }
 
-        [Command("dealwithit")] //Inspired from a Command from an existing Bot
+		//Inspired by a Command from an existing Bot
+        [Command("dealwithit")]
         public async Task Glasses()
         {
             await this.Context.Message.DeleteAsync();
             var msg = await ReplyAsync("( ͡° ͜ʖ ͡°)>⌐■-■");
             await Task.Delay(1350);
-            await msg.ModifyAsync(x => { x.Content = "( ͡⌐■ ͜ʖ ͡-■) Deal with it."; });
+            await msg.ModifyAsync(x => x.Content = "( ͡⌐■ ͜ʖ ͡-■) Deal with it.");
         }
 
         [Command("someone")]
