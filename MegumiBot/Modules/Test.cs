@@ -22,7 +22,7 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync(Context.User.Mention);
 		}
 
-		[Command("mention")]
+		[Command("mentionguilduser")]
 		public async Task Mention(IGuildUser targetGuildUser)
 		{
 			await Context.Channel.SendMessageAsync(targetGuildUser.Mention);
