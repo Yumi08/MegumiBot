@@ -53,6 +53,7 @@ namespace MegumiBot.Modules
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task warn(SocketGuildUser guilduser, [Remainder] string reason)
         {
+            await this.Context.Message.DeleteAsync();
             string timestamp = System.Convert.ToString(DateTime.Now);
             var embed = new EmbedBuilder();
             embed.WithTitle(":warning: Warn");
