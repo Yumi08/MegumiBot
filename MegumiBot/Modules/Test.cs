@@ -34,6 +34,7 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync(targetGuildUser.Mention);
 		}
 
+		// Not actually nsfw, just to test the NSFW checker
 		[Command("neko")]
 		public async Task Neko()
 		{
@@ -177,10 +178,18 @@ namespace MegumiBot.Modules
 			UserAccounts.GetAccount(Context.User).Currency = value;
 		}
 
-		[Command("testresponse")]
-		public async Task TestResponse(string key)
+		[Command("decide")]
+		public async Task Decide()
 		{
-			await Context.Channel.SendMessageAsync(ResponseGetter.GetRandomResponse(key));
+			switch (Global.Random.Next(2))
+			{
+				case 0:
+					await Context.Channel.SendMessageAsync(":thumbsup:");
+					break;
+				case 1:
+					await Context.Channel.SendMessageAsync(":thumbsdown:");
+					break;
+			}
 		}
 	}
 }
