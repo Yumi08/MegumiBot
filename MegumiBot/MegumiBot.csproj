@@ -186,6 +186,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Core\DataStorage.cs" />
     <Compile Include="Core\GuildAccounts\Guild.cs" />
+    <Compile Include="Core\GuildAccounts\GuildChannel.cs" />
     <Compile Include="Core\GuildAccounts\Guilds.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="JsonListReader.cs" />

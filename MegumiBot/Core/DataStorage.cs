@@ -1,5 +1,4 @@
-﻿using MegumiBot.Core.Accounts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
 
