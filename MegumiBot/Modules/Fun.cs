@@ -26,11 +26,14 @@ namespace MegumiBot.Modules
 				json = client.DownloadString("https://nekos.life/api/neko");
 			}
 
+            string timestamp = System.DateTime.Now.ToString();
 			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
 			var embed = new EmbedBuilder();
 			var url = searchResult.neko.ToString();
 			embed.WithImageUrl(url);
+            embed.WithTitle($"Neko for {Context.User} !");
 			embed.WithAuthor("Source : Nekos.life");
+            embed.WithFooter($"Timestamp : {timestamp} GMT-5 ");
 			embed.WithColor(255, 0, 255);
 			await Context.Channel.SendMessageAsync("", false, embed);
 		}
