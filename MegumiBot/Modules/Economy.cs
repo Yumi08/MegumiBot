@@ -16,7 +16,7 @@ namespace MegumiBot.Modules
 			var embed = new EmbedBuilder
 			{
 				Title = $"{Global.GetNickname(Context.User as IGuildUser)}'s Profile",
-				Color = new Color(220, 20, 60)
+				Color = new Color(135, 229, 197)
 			};
 
 			embed.AddInlineField("Level", userAccount.LevelNumber);

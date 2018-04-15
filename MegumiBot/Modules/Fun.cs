@@ -53,7 +53,7 @@ namespace MegumiBot.Modules
 		{
 			var users = Context.Guild.Users.Where(u => u.Status == UserStatus.Online).ToList();
 
-			var userIndex = Global.Random.Next(users.Count() + 1);
+			var userIndex = Global.Random.Next(users.Count);
 
 			await Context.Channel.SendMessageAsync(users[userIndex].Mention);
 		}

@@ -38,8 +38,8 @@ namespace MegumiBot
 		public static async Task<SocketMessage> AwaitMessage(ulong userId, ulong channelId, int delayInMs)
 		{
 			SocketMessage response = null;
-			var cancler = new CancellationTokenSource();
-			var waiter = Task.Delay(delayInMs, cancler.Token);
+			var canceler = new CancellationTokenSource();
+			var waiter = Task.Delay(delayInMs, canceler.Token);
 
 			Client.MessageReceived += OnMessageReceived;
 			try { await waiter; }
@@ -53,7 +53,7 @@ namespace MegumiBot
 					return Task.CompletedTask;
 
 				response = message;
-				cancler.Cancel();
+				canceler.Cancel();
 				return Task.CompletedTask;
 			}
 		}
