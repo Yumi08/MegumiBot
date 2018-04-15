@@ -39,7 +39,8 @@ namespace MegumiBot.Modules
 
 			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
             var embed = new EmbedBuilder();
-            embed.WithImageUrl(searchResult.neko.Tostring());
+			var url = searchResult.neko.ToString();
+            embed.WithImageUrl(url);
             embed.WithAuthor("Source : Neko.life");
             embed.WithColor(255, 0, 255);
             await Context.Channel.SendMessageAsync("", false, embed);
