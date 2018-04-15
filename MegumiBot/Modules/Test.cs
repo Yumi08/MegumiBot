@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Newtonsoft.Json;
+using WebClient = System.Net.WebClient;
 
 namespace MegumiBot.Modules
 {
@@ -22,6 +25,20 @@ namespace MegumiBot.Modules
 		public async Task Mention(IGuildUser targetGuildUser)
 		{
 			await Context.Channel.SendMessageAsync(targetGuildUser.Mention);
+		}
+
+		[Command("neko")]
+		public async Task Neko()
+		{
+			string json;
+			using (var client = new WebClient())
+			{
+				json = client.DownloadString("https://nekos.life/api/neko");
+			}
+
+			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
+
+			await Context.Channel.SendMessageAsync(searchResult.neko.ToString());
 		}
 	}
 }
