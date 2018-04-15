@@ -8,7 +8,7 @@ namespace MegumiBot.Modules
 	public class Configuration : ModuleBase<SocketCommandContext>
 	{
 		[Command("setnsfw")]
-		[RequireUserPermission(GuildPermission.Administrator)]
+		[RequireUserPermission(GuildPermission.ManageChannels)]
 		public async Task SetNsfw(IChannel channel)
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
@@ -17,14 +17,34 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync($"#{channel.Name} is now NSFW!");
 		}
 
+		[Command("setnsfw")]
+		[RequireUserPermission(GuildPermission.ManageChannels)]
+		public async Task SetNsfw()
+		{
+			var guild = Guilds.GetGuild(Context.Guild);
+			guild.GetChannel(Context.Channel).IsNsfw = true;
+
+			await Context.Channel.SendMessageAsync($"#{Context.Channel.Name} is now NSFW!");
+		}
+
 		[Command("unsetnsfw")]
-		[RequireUserPermission(GuildPermission.Administrator)]
+		[RequireUserPermission(GuildPermission.ManageChannels)]
 		public async Task UnsetNsfw(IChannel channel)
 		{
 			var guild = Guilds.GetGuild(Context.Guild);
 			guild.GetChannel(channel).IsNsfw = false;
 
 			await Context.Channel.SendMessageAsync($"#{channel.Name} is now no longer NSFW!");
+		}
+
+		[Command("unsetnsfw")]
+		[RequireUserPermission(GuildPermission.ManageChannels)]
+		public async Task UnsetNsfw()
+		{
+			var guild = Guilds.GetGuild(Context.Guild);
+			guild.GetChannel(Context.Channel).IsNsfw = false;
+
+			await Context.Channel.SendMessageAsync($"#{Context.Channel.Name} is now no longer NSFW!");
 		}
 
 		/// <summary>
