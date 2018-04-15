@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Newtonsoft.Json;
 using WebClient = System.Net.WebClient;
 
@@ -46,7 +48,27 @@ namespace MegumiBot.Modules
             await Context.Channel.SendMessageAsync("", false, embed);
         }
 
-		[Command("someone")]
+        [Command("Warn")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
+        public async Task warn(SocketGuildUser guilduser, [Remainder] string reason)
+        {
+            string timestamp = System.Convert.ToString(DateTime.Now);
+            var embed = new EmbedBuilder();
+            embed.WithTitle(":warning: Warn");
+            embed.WithAuthor(Context.Guild.Name);
+            embed.WithDescription("Description :" + reason);
+            embed.WithFooter($"Timestamp : {timestamp} UTC-5");
+            embed.WithColor(255, 0, 2);
+            await guilduser.SendMessageAsync("", false, embed);
+            var m = await Context.Channel.SendMessageAsync("Success");
+            await Task.Delay(1000);
+            await m.DeleteAsync();
+        }
+
+
+
+        [Command("someone")]
 		public async Task Someone()
 		{
 			var users = Context.Guild.Users.Where(u => u.Status == UserStatus.Online).ToList();
