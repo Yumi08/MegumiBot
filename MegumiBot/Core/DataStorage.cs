@@ -6,19 +6,19 @@ using System.IO;
 namespace MegumiBot.Core
 {
 	// Written by Petrspelos
-	public static class DataStorage
+	public static class DataStorage<T>
 	{
-		public static void SaveUserAccounts(IEnumerable<UserAccount> accounts, string filePath)
+		public static void SaveItems(IEnumerable<T> accounts, string filePath)
 		{
 			var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
 			File.WriteAllText(filePath, json);
 		}
 
-		public static IEnumerable<UserAccount> LoadUserAccounts(string filePath)
+		public static IEnumerable<T> LoadItems(string filePath)
 		{
 			if (!File.Exists(filePath)) return null;
 			var json = File.ReadAllText(filePath);
-			return JsonConvert.DeserializeObject<List<UserAccount>>(json);
+			return JsonConvert.DeserializeObject<List<T>>(json);
 		}
 
 		public static bool SaveExists(string filePath)

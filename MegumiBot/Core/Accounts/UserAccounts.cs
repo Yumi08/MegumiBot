@@ -9,13 +9,13 @@ namespace MegumiBot.Core.Accounts
 	{
 		private static List<UserAccount> _accounts;
 
-		private static string accountsFile = "Resources/accounts.json";
+		private static string _accountsFile = "Resources/accounts.json";
 
 		static UserAccounts()
 		{
-			if(DataStorage.SaveExists(accountsFile))
+			if(DataStorage<UserAccount>.SaveExists(_accountsFile))
 			{
-				_accounts = DataStorage.LoadUserAccounts(accountsFile).ToList();
+				_accounts = DataStorage<UserAccount>.LoadItems(_accountsFile).ToList();
 			}
 			else
 			{
@@ -26,7 +26,7 @@ namespace MegumiBot.Core.Accounts
 
 		public static void SaveAccounts()
 		{
-			DataStorage.SaveUserAccounts(_accounts, accountsFile);
+			DataStorage<UserAccount>.SaveItems(_accounts, _accountsFile);
 		}
 
 		public static UserAccount GetAccount(SocketUser user)
@@ -40,8 +40,7 @@ namespace MegumiBot.Core.Accounts
 				where a.Id == id
 				select a;
 
-			var account = result.FirstOrDefault();
-			if(account == null) account = CreateUserAccount(id);
+			var account = result.FirstOrDefault() ?? CreateUserAccount(id);
 			return account;
 		}
 

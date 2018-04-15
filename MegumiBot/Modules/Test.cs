@@ -51,7 +51,7 @@ namespace MegumiBot.Modules
 
         [Command("warn")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        [RequireBotPermission(ChannelPermission.ManageMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)] // RequireBotPermission isn't completely necessary here.
         public async Task Warn(SocketGuildUser guilduser, [Remainder] string reason)
         {
             await Context.Message.DeleteAsync();
