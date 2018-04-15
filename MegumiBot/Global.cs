@@ -25,5 +25,18 @@ namespace MegumiBot
 		{
 			return user.Nickname ?? user.Username;
 		}
+
+		public static bool CheckYN(string input)
+		{
+			switch (input.ToLower())
+			{
+				case "y":
+					return true;
+				case "n":
+					return false;
+				default:
+					return false;
+			}
+		}
 	}
 }

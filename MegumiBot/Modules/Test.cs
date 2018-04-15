@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using MegumiBot.Core.Accounts;
-using MegumiBot.Core.GuildAccounts;
-using MegumiBot.Core.Responses;
-using Newtonsoft.Json;
-using WebClient = System.Net.WebClient;
 
 namespace MegumiBot.Modules
 {
@@ -51,6 +45,48 @@ namespace MegumiBot.Modules
 			await Global.SaveAll();
 
 			Environment.Exit(0);
+		}
+
+		[Command("respond", RunMode = RunMode.Async)]
+		public async Task Respond()
+		{
+			await Context.Channel.SendMessageAsync("Respond! (Y/N)");
+
+			bool response;
+			var responses = 0;
+			Context.Client.MessageReceived += OnMessageReceived;
+
+			await Task.Delay(5000);
+
+			if (responses == 0)
+			{
+				await Context.Channel.SendMessageAsync("You said nothing!");
+			}
+
+			Context.Client.MessageReceived -= OnMessageReceived;
+
+			async Task OnMessageReceived(SocketMessage message)
+			{
+				if (message.Author.Id != Context.User.Id ||
+				    message.Channel.Id != Context.Channel.Id)
+					return;
+
+				if (message.Content.ToLower() != "y" && message.Content.ToLower() != "n")
+					return;
+
+				response = Global.CheckYN(message.Content);
+
+				responses += 1;
+
+				await ContinueCommand();
+			}
+
+			async Task ContinueCommand()
+			{
+				if (responses == 0) return;
+				await Context.Channel.SendMessageAsync($"You said {response}!");
+				Context.Client.MessageReceived -= OnMessageReceived;
+			}
 		}
 	}
 }
