@@ -134,7 +134,8 @@ namespace MegumiBot.Modules
 
 			embed.AddInlineField("Level", userAccount.LevelNumber);
 			embed.AddInlineField("XP", userAccount.Xp);
-			embed.AddInlineField("Money", userAccount.Currency);
+			embed.AddInlineField("Money", $"{Config.bot.CurrencySymbol}{userAccount.Currency}");
+			embed.AddInlineField("Messages", userAccount.TotalMessages);
 
 			await Context.Channel.SendMessageAsync("", embed: embed);
 		}

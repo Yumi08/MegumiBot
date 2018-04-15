@@ -8,9 +8,12 @@ namespace MegumiBot.Core
 	{
 		internal static async void MessageReceived(SocketGuildUser user, SocketTextChannel channel)
 		{
-			if (Math.Abs(UserAccounts.GetAccount(user).LastCountedMessageTime.Minute - DateTime.Now.Minute) < 1) return;
-
 			var userAccount = UserAccounts.GetAccount(user);
+
+			userAccount.TotalMessages++;
+
+			if (Math.Abs(userAccount.LastCountedMessageTime.Minute - DateTime.Now.Minute) < 1) return;
+
 			userAccount.LastCountedMessageTime = DateTime.Now;
 			var oldLevel = userAccount.LevelNumber;
 			userAccount.Xp += (uint)Global.Random.Next(15, 26);

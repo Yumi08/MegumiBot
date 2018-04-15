@@ -13,5 +13,7 @@ namespace MegumiBot.Core.Accounts
 		public uint Xp { get; set; }
 
 		public uint LevelNumber => (uint)Math.Sqrt(Xp / 50f);
+
+		public uint TotalMessages { get; set;}
 	}
 }

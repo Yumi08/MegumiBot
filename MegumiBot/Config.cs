@@ -34,5 +34,6 @@ namespace MegumiBot
 	{
 		public string Token;
 		public string CmdPrefix;
+		public string CurrencySymbol;
 	}
 }
