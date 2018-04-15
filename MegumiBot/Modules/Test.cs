@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MegumiBot.Core.GuildAccounts;
 using Newtonsoft.Json;
 using WebClient = System.Net.WebClient;
 
@@ -34,6 +35,12 @@ namespace MegumiBot.Modules
 		[Command("neko")]
 		public async Task Neko()
 		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
 			string json;
 			using (var client = new WebClient())
 			{
@@ -91,6 +98,26 @@ namespace MegumiBot.Modules
 			var userIndex = Global.Random.Next(users.Count() + 1);
 
 			await Context.Channel.SendMessageAsync(users[userIndex].Mention);
+		}
+
+		[Command("setnsfw")]
+		public async Task SetNsfw(IChannel channel)
+		{
+			var guild = Guilds.GetGuild(Context.Guild);
+			guild.GetChannel(channel).IsNsfw = true;
+			Guilds.SaveGuilds();
+
+			await Context.Channel.SendMessageAsync($"#{channel.Name} is now NSFW!");
+		}
+
+		[Command("unsetnsfw")]
+		public async Task UnsetNsfw(IChannel channel)
+		{
+			var guild = Guilds.GetGuild(Context.Guild);
+			guild.GetChannel(channel).IsNsfw = false;
+			Guilds.SaveGuilds();
+
+			await Context.Channel.SendMessageAsync($"#{channel.Name} is now no longer NSFW!");
 		}
 	}
 }
