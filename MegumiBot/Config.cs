@@ -4,12 +4,14 @@ using Newtonsoft.Json;
 namespace MegumiBot
 {
 	// Written by Petrspelos
-	class Config
+	public class Config
 	{
 		private const string ConfigFolder = "Resources";
 		private const string ConfigFile = "config.json";
 
-		public static BotConfig bot;
+		private static BotConfig _bot;
+
+		public static MegumiBot.BotConfig Bot;
 
 		static Config()
 		{
@@ -18,22 +20,35 @@ namespace MegumiBot
 
 			if(!File.Exists(ConfigFolder + "/" + ConfigFile))
 			{
-				bot = new BotConfig();
-				string json = JsonConvert.SerializeObject(bot, Formatting.Indented);
+				_bot = new BotConfig();
+				string json = JsonConvert.SerializeObject(_bot, Formatting.Indented);
 				File.WriteAllText(ConfigFolder + "/" + ConfigFile, json);
 			}
 			else
 			{
 				string json = File.ReadAllText(ConfigFolder + "/" + ConfigFile);
-				bot = JsonConvert.DeserializeObject<BotConfig>(json);
+				_bot = JsonConvert.DeserializeObject<BotConfig>(json);
 			}
+
+			Bot.Bot = _bot;
+		}
+
+		public struct BotConfig
+		{
+			public string Token;
+			public string DefaultPrefix;
+			public string CurrencySymbol;
+			public uint AutosaveRate;
 		}
 	}
 
 	public struct BotConfig
 	{
-		public string Token;
-		public string DefaultPrefix;
-		public string CurrencySymbol;
+		public Config.BotConfig Bot;
+
+		public string Token => Bot.Token;
+		public string DefaultPrefix => Bot.DefaultPrefix;
+		public string CurrencySymbol => Bot.CurrencySymbol;
+		public uint AutosaveRate => Bot.AutosaveRate * 60000;
 	}
 }

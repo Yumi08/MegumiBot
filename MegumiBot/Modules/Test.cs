@@ -31,7 +31,7 @@ namespace MegumiBot.Modules
 		[Command("currencyset")]
 		public async Task CurrencySet(uint value)
 		{
-			await Context.Channel.SendMessageAsync($"Setting your currency to {Config.bot.CurrencySymbol}{value}!");
+			await Context.Channel.SendMessageAsync($"Setting your currency to {Config.Bot.CurrencySymbol}{value}!");
 			UserAccounts.GetAccount(Context.User).Currency = value;
 		}
 

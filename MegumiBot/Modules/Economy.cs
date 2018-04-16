@@ -21,7 +21,7 @@ namespace MegumiBot.Modules
 
 			embed.AddInlineField("Level", userAccount.LevelNumber);
 			embed.AddInlineField("XP", userAccount.Xp);
-			embed.AddInlineField("Money", $"{Config.bot.CurrencySymbol}{userAccount.Currency}");
+			embed.AddInlineField("Money", $"{Config.Bot.CurrencySymbol}{userAccount.Currency}");
 			embed.AddInlineField("Messages", userAccount.TotalMessages);
 
 			await Context.Channel.SendMessageAsync("", embed: embed);
@@ -37,7 +37,7 @@ namespace MegumiBot.Modules
 			if (userAccount.Currency < amt)
 			{
 				await Context.Channel.SendMessageAsync(
-					$"Unfortunately, you're {Config.bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
+					$"Unfortunately, you're {Config.Bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
 				return;
 			}
 
@@ -49,7 +49,7 @@ namespace MegumiBot.Modules
 					await Context.Channel.SendMessageAsync(ResponseGetter.GetRandomResponse("BetLoss"));
 					break;
 				case 1:
-					await Context.Channel.SendMessageAsync($"Congratulations! You won {Config.bot.CurrencySymbol}{amt * 2}!");
+					await Context.Channel.SendMessageAsync($"Congratulations! You won {Config.Bot.CurrencySymbol}{amt * 2}!");
 					userAccount.Currency += amt * 2;
 					break;
 			}
@@ -63,18 +63,18 @@ namespace MegumiBot.Modules
 			if (userAccount.Currency < amt)
 			{
 				await Context.Channel.SendMessageAsync(
-					$"Unfortunately, you're {Config.bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
+					$"Unfortunately, you're {Config.Bot.CurrencySymbol}{amt - userAccount.Currency} short of that!");
 				return;
 			}
 
-			await Context.Channel.SendMessageAsync($"Are you sure you want to dump {Config.bot.CurrencySymbol}{amt}? (Y/N)");
+			await Context.Channel.SendMessageAsync($"Are you sure you want to dump {Config.Bot.CurrencySymbol}{amt}? (Y/N)");
 
 			var response = await Global.AwaitYesNoMessage(Context.User.Id, Context.Channel.Id, 5000);
 
 			switch (response)
 			{
 				case true:
-					await Context.Channel.SendMessageAsync($"Throwing away {Config.bot.CurrencySymbol}{amt}!");
+					await Context.Channel.SendMessageAsync($"Throwing away {Config.Bot.CurrencySymbol}{amt}!");
 					userAccount.Currency -= amt;
 					break;
 				case false:

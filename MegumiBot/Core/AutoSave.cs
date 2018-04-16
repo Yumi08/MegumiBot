@@ -14,7 +14,7 @@ namespace MegumiBot.Core
 		{
 			_loopingTimer = new Timer
 			{
-				Interval = 60000,
+				Interval = Config.Bot.AutosaveRate,
 				AutoReset = true,
 				Enabled = true
 			};

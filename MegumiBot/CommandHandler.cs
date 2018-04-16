@@ -33,7 +33,7 @@ namespace MegumiBot
 
 			int argPos = 0;
 			// If the guild prefix hasn't been set, then get the default one
-			if(msg.HasStringPrefix(Guilds.GetGuild(context.Guild).Prefix ?? Config.bot.DefaultPrefix, ref argPos) 
+			if(msg.HasStringPrefix(Guilds.GetGuild(context.Guild).Prefix ?? Config.Bot.DefaultPrefix, ref argPos) 
 			   || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
 			{
 				var result = await _service.ExecuteAsync(context, argPos);
