@@ -25,7 +25,7 @@ namespace MegumiBot.Modules
 				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
 				return;
 			}
-
+			
 			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
 
 			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";

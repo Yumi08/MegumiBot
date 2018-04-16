@@ -9,9 +9,7 @@ namespace MegumiBot
 		private const string ConfigFolder = "Resources";
 		private const string ConfigFile = "config.json";
 
-		private static BotConfig _bot;
-
-		public static MegumiBot.BotConfig Bot;
+		public static BotConfig Bot;
 
 		static Config()
 		{
@@ -20,37 +18,33 @@ namespace MegumiBot
 
 			if(!File.Exists(ConfigFolder + "/" + ConfigFile))
 			{
-				_bot = new BotConfig();
-				string json = JsonConvert.SerializeObject(_bot, Formatting.Indented);
+				Bot = new BotConfig();
+				string json = JsonConvert.SerializeObject(Bot, Formatting.Indented);
 				File.WriteAllText(ConfigFolder + "/" + ConfigFile, json);
 			}
 			else
 			{
 				string json = File.ReadAllText(ConfigFolder + "/" + ConfigFile);
-				_bot = JsonConvert.DeserializeObject<BotConfig>(json);
+				Bot = JsonConvert.DeserializeObject<BotConfig>(json);
 			}
-
-			Bot.Bot = _bot;
 		}
 
 		public struct BotConfig
 		{
-			public string Token;
-			public string DefaultPrefix;
-			public string CurrencySymbol;
-			public uint AutosaveRate;
-			public string YubooruLocation;
+			[JsonProperty] private string token;
+			[JsonIgnore] public string Token => token;
+
+			[JsonProperty] private string defaultPrefix;
+			[JsonIgnore] public string DefaultPrefix => defaultPrefix;
+
+			[JsonProperty] private string currencySymbol;
+			[JsonIgnore] public string CurrencySymbol => currencySymbol;
+
+			[JsonProperty] private uint autosaveRate;
+			[JsonIgnore] public uint AutosaveRate => autosaveRate * 60000;
+
+			[JsonProperty] private string yubooruLocation;
+			[JsonIgnore] public string YubooruLocation => yubooruLocation;
 		}
-	}
-
-	public struct BotConfig
-	{
-		public Config.BotConfig Bot;
-
-		public string Token => Bot.Token;
-		public string DefaultPrefix => Bot.DefaultPrefix;
-		public string CurrencySymbol => Bot.CurrencySymbol;
-		public uint AutosaveRate => Bot.AutosaveRate * 60000;
-		public string YubooruLocation => Bot.YubooruLocation;
 	}
 }
