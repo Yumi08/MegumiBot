@@ -23,11 +23,19 @@ namespace MegumiBot.Core.GuildAccounts
 			}
 		}
 
+		/// <summary>
+		/// Save all the guilds into the json file.
+		/// </summary>
 		public static void SaveGuilds()
 		{
 			DataStorage<Guild>.SaveItems(_guilds, _guildsFile);
 		}
 		
+		/// <summary>
+		/// Get a bot guild from a Discord guild.
+		/// </summary>
+		/// <param name="guild"></param>
+		/// <returns></returns>
 		public static Guild GetGuild(IGuild guild)
 		{
 			return GetOrCreateGuild(guild.Id);

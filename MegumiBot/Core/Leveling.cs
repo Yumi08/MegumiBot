@@ -4,8 +4,16 @@ using MegumiBot.Core.Accounts;
 
 namespace MegumiBot.Core
 {
+	/// <summary>
+	/// User leveling from sending messages
+	/// </summary>
 	internal static class Leveling
 	{
+		/// <summary>
+		/// Should be called whenever the bot sees a message be sent by a user.
+		/// </summary>
+		/// <param name="user"></param>
+		/// <param name="channel"></param>
 		internal static async void MessageReceived(SocketGuildUser user, SocketTextChannel channel)
 		{
 			var userAccount = UserAccounts.GetAccount(user);

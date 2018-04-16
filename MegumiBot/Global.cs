@@ -15,6 +15,10 @@ namespace MegumiBot
 		internal static ulong MessageIdToTrack { get; set; }
 		public static Random Random = new Random();
 
+		/// <summary>
+		/// Save all the current bot variables such as user accounts and guilds.
+		/// </summary>
+		/// <returns></returns>
 		public static Task SaveAll()
 		{
 			UserAccounts.SaveAccounts();
@@ -23,6 +27,11 @@ namespace MegumiBot
 			return Task.CompletedTask;
 		}
 
+		/// <summary>
+		/// Get a user's nickname, else return their username.
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
 		public static string GetNickname(IGuildUser user)
 		{
 			return user.Nickname ?? user.Username;

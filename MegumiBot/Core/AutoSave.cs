@@ -5,7 +5,9 @@ using Discord.WebSocket;
 
 namespace MegumiBot.Core
 {
-	// Written by Petrspelos
+	/// <summary>
+	/// Automatically saves bot guilds, user-accounts, etc.
+	/// </summary>
 	internal static class AutoSave
 	{
 		private static Timer _loopingTimer;

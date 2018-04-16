@@ -1,6 +1,7 @@
 ﻿using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Linq;
+using Discord;
 
 namespace MegumiBot.Core.Accounts
 {
@@ -24,12 +25,20 @@ namespace MegumiBot.Core.Accounts
 			}
 		}
 
+		/// <summary>
+		/// Save all of the user accounts into the json file.
+		/// </summary>
 		public static void SaveAccounts()
 		{
 			DataStorage<UserAccount>.SaveItems(_accounts, _accountsFile);
 		}
 
-		public static UserAccount GetAccount(SocketUser user)
+		/// <summary>
+		/// Get a user bot account by their Discord account
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		public static UserAccount GetAccount(IUser user)
 		{
 			return GetOrCreateAccount(user.Id);
 		}
