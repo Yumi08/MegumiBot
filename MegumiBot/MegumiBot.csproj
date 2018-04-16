@@ -138,8 +138,9 @@
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="YubooruCollectionManager">
-      <HintPath>..\..\YubooruCollectionManager\YubooruCollectionManager\bin\Debug\YubooruCollectionManager.exe</HintPath>
+    <Reference Include="YubooruCollectionManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\YubooruCollectionManager\YubooruCollectionManager\bin\Release\YubooruCollectionManager.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
