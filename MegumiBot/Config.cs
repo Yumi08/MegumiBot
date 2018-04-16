@@ -39,6 +39,7 @@ namespace MegumiBot
 			public string DefaultPrefix;
 			public string CurrencySymbol;
 			public uint AutosaveRate;
+			public string YubooruLocation;
 		}
 	}
 
@@ -50,5 +51,6 @@ namespace MegumiBot
 		public string DefaultPrefix => Bot.DefaultPrefix;
 		public string CurrencySymbol => Bot.CurrencySymbol;
 		public uint AutosaveRate => Bot.AutosaveRate * 60000;
+		public string YubooruLocation => Bot.YubooruLocation;
 	}
 }

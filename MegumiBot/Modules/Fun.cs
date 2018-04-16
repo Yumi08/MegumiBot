@@ -14,12 +14,6 @@ namespace MegumiBot.Modules
 		[Command("neko")]
 		public async Task Neko()
 		{
-			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
-			{
-				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
-				return;
-			}
-
 			string json;
 			using (var client = new WebClient())
 			{
