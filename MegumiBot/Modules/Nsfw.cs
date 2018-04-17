@@ -15,8 +15,28 @@ namespace MegumiBot.Modules
 		/// <summary>
 		/// Get a lewd image on Yumi08's personal hentai collection ;>
 		/// </summary>
-		/// <param name="tag"></param>
 		/// <returns></returns>
+		[Command("yubooru")]
+		public async Task Yubooru()
+		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
+			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
+
+			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoPath);
+			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+
+			var image = images[Global.Random.Next(images.Count)];
+			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
+
+			await Context.Channel.SendFileAsync(imageFile?.FullName);
+		}
+
 		[Command("yubooru")]
 		public async Task Yubooru(string tag)
 		{
@@ -74,6 +94,25 @@ namespace MegumiBot.Modules
 			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
 
 			await Context.Channel.SendFileAsync(imageFile?.FullName);
+		}
+
+		[Command("yuboorustats")]
+		public async Task YubooruStats(string stat)
+		{
+			// ToLower() is bad practice, but switches only use ordinal comparison
+			switch (stat.ToLower())
+			{
+				case "total":
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
+					break;
+
+				default:
+					await Context.Channel.SendMessageAsync("Unknown statistic!");
+					break;
+			}
 		}
 	}
 }
