@@ -27,7 +27,6 @@ namespace MegumiBot.Core
 
 		private static void OnTimerTicked(object sender, ElapsedEventArgs e)
 		{
-			Console.WriteLine("Autosaving!");
 			Global.SaveAll();
 		}
 	}

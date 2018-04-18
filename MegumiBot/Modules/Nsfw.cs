@@ -12,6 +12,46 @@ namespace MegumiBot.Modules
 {
 	public class Nsfw : ModuleBase<SocketCommandContext>
 	{
+		
+		private static void Search(string tag, List<Image> images, List<Image> matchingImages)
+		{
+			foreach (var image in images)
+			{
+				var allTags = new List<string>();
+				if (image.Artists != null) allTags.AddRange(image.Artists);
+				if (image.Characters != null) allTags.AddRange(image.Characters);
+				if (image.Copyrights != null) allTags.AddRange(image.Copyrights);
+				if (image.Tags != null) allTags.AddRange(image.Tags);
+
+				if (allTags.Any(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase)))
+					matchingImages.Add(image);
+			}
+		}
+		private static void Search(string[] tags, List<Image> images, List<Image> matchingImages)
+		{
+			foreach (var image in images)
+			{
+				var allTags = new List<string>();
+				if (image.Artists != null) allTags.AddRange(image.Artists);
+				if (image.Characters != null) allTags.AddRange(image.Characters);
+				if (image.Copyrights != null) allTags.AddRange(image.Copyrights);
+				if (image.Tags != null) allTags.AddRange(image.Tags);
+
+				var matches = 0u;
+				foreach (var tag in allTags)
+				{
+					foreach (var t in tags)
+					{
+						if (tag.Equals(t, StringComparison.InvariantCultureIgnoreCase))
+							matches++;
+					}
+				}
+
+				if (matches == tags.Length) matchingImages.Add(image);
+			}
+		}
+
+
 		/// <summary>
 		/// Get a lewd image on Yumi08's personal hentai collection ;>
 		/// </summary>
@@ -45,7 +85,7 @@ namespace MegumiBot.Modules
 				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
 				return;
 			}
-			
+
 			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
 
 			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
@@ -54,41 +94,32 @@ namespace MegumiBot.Modules
 
 			List<Image> matchingImages = new List<Image>();
 
-			#region Match Detection
+			Search(tag, images, matchingImages);
 
-			matchingImages.AddRange(images.Where(i =>
+			var image = matchingImages[Global.Random.Next(matchingImages.Count)];
+			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
+
+			await Context.Channel.SendFileAsync(imageFile?.FullName);
+		}
+
+		[Command("yubooru")]
+		public async Task Yubooru(params string[] tags)
+		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
 			{
-				if (i.Tags == null) return false;
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
 
-				return i.Tags
-					.Any(t => t.Equals(tag, StringComparison.CurrentCultureIgnoreCase));
-			}));
+			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
 
-			matchingImages.AddRange(images.Where(i =>
-			{
-				if (i.Characters == null) return false;
+			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoPath);
+			var images = JsonConvert.DeserializeObject<List<Image>>(json);
 
-				return i.Characters
-					.Any(t => t.Equals(tag, StringComparison.CurrentCultureIgnoreCase));
-			}));
+			List<Image> matchingImages = new List<Image>();
 
-			matchingImages.AddRange(images.Where(i =>
-			{
-				if (i.Copyrights == null) return false;
-
-				return i.Copyrights
-					.Any(t => t.Equals(tag, StringComparison.CurrentCultureIgnoreCase));
-			}));
-
-			matchingImages.AddRange(images.Where(i =>
-			{
-				if (i.Artists == null) return false;
-
-				return i.Artists
-					.Any(t => t.Equals(tag, StringComparison.CurrentCultureIgnoreCase));
-			}));
-
-			#endregion
+			Search(tags, images, matchingImages);
 
 			var image = matchingImages[Global.Random.Next(matchingImages.Count)];
 			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
@@ -98,6 +129,25 @@ namespace MegumiBot.Modules
 
 		[Command("yuboorustats")]
 		public async Task YubooruStats(string stat)
+		{
+			// ToLower() is bad practice, but switches only use ordinal comparison
+			switch (stat.ToLower())
+			{
+				case "total":
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
+					break;
+
+				default:
+					await Context.Channel.SendMessageAsync("Unknown statistic!");
+					break;
+			}
+		}
+
+		[Command("yuboorustats")]
+		public async Task YubooruStats(string stat, string tag)
 		{
 			// ToLower() is bad practice, but switches only use ordinal comparison
 			switch (stat.ToLower())
