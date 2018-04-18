@@ -13,21 +13,6 @@ namespace MegumiBot.Modules
 {
 	public class Nsfw : ModuleBase<SocketCommandContext>
 	{
-		
-		private static void Search(string tag, List<Image> images, List<Image> matchingImages)
-		{
-			foreach (var image in images)
-			{
-				var allTags = new List<string>();
-				if (image.Artists != null) allTags.AddRange(image.Artists);
-				if (image.Characters != null) allTags.AddRange(image.Characters);
-				if (image.Copyrights != null) allTags.AddRange(image.Copyrights);
-				if (image.Tags != null) allTags.AddRange(image.Tags);
-
-				if (allTags.Any(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase)))
-					matchingImages.Add(image);
-			}
-		}
 		private static void Search(string[] tags, List<Image> images, List<Image> matchingImages)
 		{
 			foreach (var image in images)
@@ -73,31 +58,6 @@ namespace MegumiBot.Modules
 			var images = JsonConvert.DeserializeObject<List<Image>>(json);
 
 			var image = images[Global.Random.Next(images.Count)];
-			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
-
-			await Context.Channel.SendFileAsync(imageFile?.FullName);
-		}
-
-		[Command("yubooru")]
-		public async Task Yubooru(string tag)
-		{
-			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
-			{
-				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
-				return;
-			}
-
-			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
-
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
-
-			List<Image> matchingImages = new List<Image>();
-
-			Search(tag, images, matchingImages);
-
-			var image = matchingImages[Global.Random.Next(matchingImages.Count)];
 			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
 
 			await Context.Channel.SendFileAsync(imageFile?.FullName);
