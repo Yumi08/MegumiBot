@@ -15,6 +15,7 @@ namespace MegumiBot
         private DiscordSocketClient _client;
         private CommandHandler _handler;
 	    private bool _clientIsReady;
+	    private SocketTextChannel _currentMessageChannel;
 
         static void Main()
         => new Program().StartAsync().GetAwaiter().GetResult();
@@ -43,6 +44,13 @@ namespace MegumiBot
             await Task.Delay(-1);
         }
 
+	    private async Task Log(LogMessage msg)
+	    {
+		    Console.WriteLine(msg.Message);
+	    }
+
+		#region Console Commands
+
 	    private async Task ConsoleInput()
 	    {
 		    var input = string.Empty;
@@ -53,7 +61,14 @@ namespace MegumiBot
 				switch (input?.Trim().ToLower())
 				{
 					case "message":
+						if (!_clientIsReady) break;
 						ConsoleSendMessage();
+						break;
+
+					case "setchannel":
+						Console.WriteLine("\nSelect the guild:");
+						var guild = GetSelected(_client.Guilds);
+						_currentMessageChannel = GetSelected(guild.TextChannels);
 						break;
 				}
 			}
@@ -61,24 +76,42 @@ namespace MegumiBot
 
 	    private async void ConsoleSendMessage()
 	    {
-			Console.WriteLine("Select the guild:");
+		    if (_currentMessageChannel != null)
+		    {
+			    GetMessageAndSend(_currentMessageChannel);
+			    return;
+		    }
+
+			Console.WriteLine("\nSelect the guild:");
 		    var guild = GetSelected(_client.Guilds);
 		    var textChannel = GetSelected(guild.TextChannels);
 		    var msg = string.Empty;
-		    while (msg.Trim() == string.Empty)
-		    {
-			    Console.WriteLine("Your message:");
-			    msg = Console.ReadLine();
-		    }
+		    while (msg?.Trim() == string.Empty)
+			{
+				Console.WriteLine("Your message:");
+				msg = Console.ReadLine();
+				Console.WriteLine();
+			}
 
-		    await textChannel.SendMessageAsync(msg);
+		    _currentMessageChannel = textChannel;
+			await textChannel.SendMessageAsync(msg);
 	    }
 
-	    private static SocketGuild GetSelected(IEnumerable<SocketGuild> guilds)
+		private static async void GetMessageAndSend(ITextChannel channel)
+		{
+			Console.WriteLine("Your message:");
+			var msg = Console.ReadLine();
+			Console.WriteLine();
+
+			await channel.SendMessageAsync(msg);
+		}
+
+		private static SocketGuild GetSelected(IEnumerable<SocketGuild> guilds)
 	    {
 		    var guildsList = guilds.ToList();
 			var maxIndex = guildsList.Count - 1;
 
+		    Console.WriteLine();
 		    for (var i = 0; i <= maxIndex; i++)
 		    {
 			    Console.WriteLine($"{i} - {guildsList[i].Name}");
@@ -90,12 +123,12 @@ namespace MegumiBot
 			    var success = int.TryParse(Console.ReadLine()?.Trim(), out selectedIndex);
 			    if (!success)
 			    {
-					Console.WriteLine("Please provide a valid index.");
+					Console.WriteLine("\nPlease provide a valid index.");
 				    selectedIndex = -1;
 			    }
 
 				if (selectedIndex < 0 || selectedIndex > maxIndex)
-					Console.WriteLine("The index didn't fit within the guild list, please try again.");
+					Console.WriteLine("\nThe index didn't fit within the guild list, please try again.");
 		    }
 
 		    return guildsList[selectedIndex];
@@ -106,6 +139,7 @@ namespace MegumiBot
 		    var socketTextChannels = channels.ToList();
 		    var maxIndex = socketTextChannels.Count - 1;
 
+		    Console.WriteLine();
 		    for (var i = 0; i <= maxIndex; i++)
 		    {
 			    Console.WriteLine($"{i} - {socketTextChannels[i].Name}");
@@ -117,20 +151,18 @@ namespace MegumiBot
 			    var success = int.TryParse(Console.ReadLine()?.Trim(), out selectedIndex);
 			    if (!success)
 			    {
-				    Console.WriteLine("Please provide a valid index.");
+				    Console.WriteLine("\nPlease provide a valid index.");
 				    selectedIndex = -1;
 			    }
 
 			    if (selectedIndex < 0 || selectedIndex > maxIndex)
-				    Console.WriteLine("The index didn't fit within the channel list, please try again.");
+				    Console.WriteLine("\nThe index didn't fit within the channel list, please try again.");
 		    }
 
 		    return socketTextChannels[selectedIndex];
 	    }
 
-        private async Task Log(LogMessage msg)
-        {
-            Console.WriteLine(msg.Message);
-        }
+		#endregion
+
     }
 }
