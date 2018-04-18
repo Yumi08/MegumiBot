@@ -92,6 +92,12 @@ namespace MegumiBot.Modules
 		[Alias("yuboorustats")]
 		public async Task YubooruStats()
 		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
 			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
 			var json = File.ReadAllText(imageInfoPath);
 			var images = JsonConvert.DeserializeObject<List<Image>>(json);
@@ -114,6 +120,12 @@ namespace MegumiBot.Modules
 		[Alias("yuboorustats")]
 		public async Task YubooruStats(string stat)
 		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
 			// ToLower() is bad practice, but switches only use ordinal comparison
 			switch (stat.ToLower())
 			{
@@ -242,6 +254,12 @@ namespace MegumiBot.Modules
 		[Alias("yuboorustats")]
 		public async Task YubooruStats(string stat, params string[] tags)
 		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
 			// ToLower() is bad practice, but switches only use ordinal comparison
 			switch (stat.ToLower())
 			{

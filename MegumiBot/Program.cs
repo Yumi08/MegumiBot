@@ -60,7 +60,7 @@ namespace MegumiBot
 
 				switch (input?.Trim().ToLower())
 				{
-					case "message":
+					case "m":
 						if (!_clientIsReady) break;
 						ConsoleSendMessage();
 						break;
@@ -116,6 +116,7 @@ namespace MegumiBot
 		    {
 			    Console.WriteLine($"{i} - {guildsList[i].Name}");
 		    }
+		    Console.WriteLine();
 
 		    var selectedIndex = -1;
 		    while (selectedIndex < 0 || selectedIndex > maxIndex)
@@ -144,6 +145,7 @@ namespace MegumiBot
 		    {
 			    Console.WriteLine($"{i} - {socketTextChannels[i].Name}");
 		    }
+		    Console.WriteLine();
 
 		    var selectedIndex = -1;
 		    while (selectedIndex < 0 || selectedIndex > maxIndex)
