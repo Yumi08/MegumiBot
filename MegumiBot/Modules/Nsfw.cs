@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using MegumiBot.Core.GuildAccounts;
 using Newtonsoft.Json;
-using YubooruCollectionManager.Files;
+using Image = YubooruCollectionManager.Files.Image;
 
 namespace MegumiBot.Modules
 {
@@ -129,17 +130,36 @@ namespace MegumiBot.Modules
 
 		[Command("yuboorustat")]
 		[Alias("yuboorustats")]
+		public async Task YubooruStats()
+		{
+			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoPath);
+			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+
+			var embed = new EmbedBuilder
+			{
+				Title = "Yubooru's stats",
+				Color = Color.DarkMagenta
+			};
+			embed.AddInlineField("Total Images", images.Count);
+
+			await Context.Channel.SendMessageAsync("", embed: embed);
+		}
+		[Command("yuboorustat")]
+		[Alias("yuboorustats")]
 		public async Task YubooruStats(string stat)
 		{
 			// ToLower() is bad practice, but switches only use ordinal comparison
 			switch (stat.ToLower())
 			{
 				case "total":
+				{
 					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
 					var json = File.ReadAllText(imageInfoPath);
 					var images = JsonConvert.DeserializeObject<List<Image>>(json);
 					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
 					break;
+				}
 
 				default:
 					await Context.Channel.SendMessageAsync("Unknown statistic!");
@@ -163,7 +183,7 @@ namespace MegumiBot.Modules
 
 					Search(tags, images, matchingImages);
 
-					var tagsString = tags.Aggregate(string.Empty, (current, tag) => current + " " + tag);
+					var tagsString = string.Join(" + ", tags);
 
 					await Context.Channel.SendMessageAsync($"Yubooru currently contains {matchingImages.Count} images of tags \"{tagsString}\"!");
 					break;
