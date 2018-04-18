@@ -37,7 +37,7 @@ namespace MegumiBot
 			   || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
 			{
 				var result = await _service.ExecuteAsync(context, argPos);
-				if(!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+				if(!result.IsSuccess)
 				{
 					Console.WriteLine(result.ErrorReason);
 				}

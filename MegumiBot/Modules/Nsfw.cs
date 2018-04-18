@@ -118,8 +118,98 @@ namespace MegumiBot.Modules
 					var json = File.ReadAllText(imageInfoPath);
 					var images = JsonConvert.DeserializeObject<List<Image>>(json);
 					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
-					break;
 				}
+					break;
+
+				case "tags":
+				{
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var tags = new List<string>();
+
+					foreach (var image in images)
+					{
+						foreach (var tag in image.Tags)
+						{
+							var tagString = tag.ToLower();
+							if (!tags.Contains(tagString))
+								tags.Add(tagString);
+						}
+					}
+
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {tags.Count} different tags!");
+				}
+					break;
+
+				case "artists":
+				{
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var artists = new List<string>();
+
+					foreach (var image in images)
+					{
+						if (image.Artists == null) continue;
+
+						foreach (var artist in image.Artists)
+						{
+							var artistString = artist.ToLower();
+							if (!artists.Contains(artistString))
+								artists.Add(artistString);
+						}
+					}
+
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {artists.Count} different artists!");
+				}
+					break;
+
+				case "copyrights":
+				{
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var copyrights = new List<string>();
+
+					foreach (var image in images)
+					{
+						if (image.Copyrights == null) continue;
+
+						foreach (var copyright in image.Copyrights)
+						{
+							var copyrightString = copyright.ToLower();
+							if (!copyrights.Contains(copyrightString))
+								copyrights.Add(copyrightString);
+						}
+					}
+
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {copyrights.Count} different copyrights!");
+				}
+					break;
+
+				case "characters":
+				{
+					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoPath);
+					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var characters = new List<string>();
+
+					foreach (var image in images)
+					{
+						if (image.Characters == null) continue;
+
+						foreach (var character in image.Characters)
+						{
+							var characterString = character.ToLower();
+							if (!characters.Contains(characterString))
+								characters.Add(characterString);
+						}
+					}
+
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {characters.Count} different characters!");
+				}
+					break;
 
 				default:
 					await Context.Channel.SendMessageAsync("Unknown statistic!");
