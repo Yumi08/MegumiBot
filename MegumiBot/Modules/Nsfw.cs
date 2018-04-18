@@ -127,7 +127,8 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendFileAsync(imageFile?.FullName);
 		}
 
-		[Command("yuboorustats")]
+		[Command("yuboorustat")]
+		[Alias("yuboorustats")]
 		public async Task YubooruStats(string stat)
 		{
 			// ToLower() is bad practice, but switches only use ordinal comparison
@@ -146,8 +147,9 @@ namespace MegumiBot.Modules
 			}
 		}
 
-		[Command("yuboorustats")]
-		public async Task YubooruStats(string stat, string tag)
+		[Command("yuboorustat")]
+		[Alias("yuboorustats")]
+		public async Task YubooruStats(string stat, params string[] tags)
 		{
 			// ToLower() is bad practice, but switches only use ordinal comparison
 			switch (stat.ToLower())
@@ -156,7 +158,14 @@ namespace MegumiBot.Modules
 					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
 					var json = File.ReadAllText(imageInfoPath);
 					var images = JsonConvert.DeserializeObject<List<Image>>(json);
-					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
+
+					var matchingImages = new List<Image>();
+
+					Search(tags, images, matchingImages);
+
+					var tagsString = tags.Aggregate(string.Empty, (current, tag) => current + " " + tag);
+
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {matchingImages.Count} images of tags \"{tagsString}\"!");
 					break;
 
 				default:
