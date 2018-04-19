@@ -305,7 +305,7 @@ namespace MegumiBot.Modules
 			var artistList = user.LastYubooruImageInfo.Artists;
 			artistList.Sort();
 
-			var characterList = user.LastYubooruImageInfo.Artists;
+			var characterList = user.LastYubooruImageInfo.Characters;
 			characterList.Sort();
 
 			var copyrightList = user.LastYubooruImageInfo.Copyrights;
@@ -324,18 +324,18 @@ namespace MegumiBot.Modules
 			var copyrightTitle = copyrights != "" ? "**Copyright**\n" : "";
 			var tagTitle = tags != "" ? "**Tag**\n" : "";
 
-			var embedTitle = "";
+			string embedTitle;
 			if (artists == "" && characters != "")
-				embedTitle = string.Join(" and ", characters);
+				embedTitle = string.Join(" and ", characterList);
 
 			else if (artists != "" && characters == "")
-				embedTitle = "Drawn by " + string.Join(" and ", artists);
+				embedTitle = "Drawn by " + string.Join(" and ", artistList);
 
 			else if (artists == "" && characters == "")
 				embedTitle = "Unknown";
 
 			else
-				embedTitle = $"{string.Join(" and ", characters)} drawn by {string.Join(" and ", artists)}";
+				embedTitle = $"{string.Join(" and ", characterList)} drawn by {string.Join(" and ", artistList)}";
 
 			var embed = new EmbedBuilder
 			{
