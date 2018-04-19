@@ -337,6 +337,15 @@ namespace MegumiBot.Modules
 			else
 				embedTitle = $"{string.Join(" and ", characterList)} drawn by {string.Join(" and ", artistList)}";
 
+			artistTitle = artistTitle.Replace("_", "\\_");
+			artists = artists.Replace("_", "\\_");
+			characterTitle = characterTitle.Replace("_", "\\_");
+			characters = characters.Replace("_", "\\_");
+			copyrightTitle = copyrightTitle.Replace("_", "\\_");
+			copyrights = copyrights.Replace("_", "\\_");
+			tagTitle = tagTitle.Replace("_", "\\_");
+			tags = tags.Replace("_", "\\_");
+
 			var embed = new EmbedBuilder
 			{
 				Title = embedTitle,
