@@ -5,15 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using MegumiBot.Core.Accounts;
 using MegumiBot.Core.GuildAccounts;
 using Newtonsoft.Json;
-using Image = YubooruCollectionManager.Files.Image;
+using ImageInfo = YubooruCollectionManager.Files.ImageInfo;
 
 namespace MegumiBot.Modules
 {
 	public class Nsfw : ModuleBase<SocketCommandContext>
 	{
-		private static void Search(string[] tags, List<Image> images, List<Image> matchingImages)
+		private static void Search(string[] tags, List<ImageInfo> images, List<ImageInfo> matchingimages)
 		{
 			foreach (var image in images)
 			{
@@ -33,7 +34,7 @@ namespace MegumiBot.Modules
 					}
 				}
 
-				if (matches == tags.Length) matchingImages.Add(image);
+				if (matches == tags.Length) matchingimages.Add(image);
 			}
 		}
 
@@ -53,13 +54,14 @@ namespace MegumiBot.Modules
 
 			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
 
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 
 			var image = images[Global.Random.Next(images.Count)];
 			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
 
+			UserAccounts.GetAccount(Context.User).LastYubooruImageInfo = image;
 			await Context.Channel.SendFileAsync(imageFile?.FullName);
 		}
 
@@ -74,22 +76,23 @@ namespace MegumiBot.Modules
 
 			var directory = new DirectoryInfo(Config.Bot.YubooruLocation);
 
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 
-			List<Image> matchingImages = new List<Image>();
+			List<ImageInfo> matchingimages = new List<ImageInfo>();
 
-			Search(tags, images, matchingImages);
+			Search(tags, images, matchingimages);
 
-			var image = matchingImages[Global.Random.Next(matchingImages.Count)];
+			var image = matchingimages[Global.Random.Next(matchingimages.Count)];
 			var imageFile = directory.GetFiles().FirstOrDefault(f => Path.GetFileNameWithoutExtension(f.Name) == image.Id);
 
+			UserAccounts.GetAccount(Context.User).LastYubooruImageInfo = image;
 			await Context.Channel.SendFileAsync(imageFile?.FullName);
 		}
 
 		[Command("yuboorustat")]
-		[Alias("yuboorustats")]
+		[Alias("yuboorustats", "ystat")]
 		public async Task YubooruStats()
 		{
 			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
@@ -98,16 +101,16 @@ namespace MegumiBot.Modules
 				return;
 			}
 
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 
 			var embed = new EmbedBuilder
 			{
 				Title = "Yubooru's stats",
 				Color = Color.DarkMagenta
 			};
-			embed.AddInlineField("Images", images.Count);
+			embed.AddInlineField("images", images.Count);
 			embed.AddInlineField("Tags", GetTotalTagCount());
 			embed.AddInlineField("Artists", GetTotalArtistCount());
 			embed.AddInlineField("Copyrights", GetTotalCopyrightCount());
@@ -117,7 +120,7 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync("", embed: embed);
 		}
 		[Command("yuboorustat")]
-		[Alias("yuboorustats")]
+		[Alias("yuboorustats", "ystat")]
 		public async Task YubooruStats(string stat)
 		{
 			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
@@ -131,9 +134,9 @@ namespace MegumiBot.Modules
 			{
 				case "total":
 				{
-					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-					var json = File.ReadAllText(imageInfoPath);
-					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoFilePath);
+					var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 					await Context.Channel.SendMessageAsync($"Yubooru currently contains {images.Count} images!");
 				}
 					break;
@@ -166,9 +169,9 @@ namespace MegumiBot.Modules
 
 		private static int GetTotalTagCount()
 		{
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 			var tags = new List<string>();
 
 			foreach (var image in images)
@@ -186,9 +189,9 @@ namespace MegumiBot.Modules
 
 		private static int GetTotalArtistCount()
 		{
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 			var artists = new List<string>();
 
 			foreach (var image in images)
@@ -208,9 +211,9 @@ namespace MegumiBot.Modules
 
 		private static int GetTotalCopyrightCount()
 		{
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 			var copyrights = new List<string>();
 
 			foreach (var image in images)
@@ -230,9 +233,9 @@ namespace MegumiBot.Modules
 
 		private static int GetTotalCharacterCount()
 		{
-			var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-			var json = File.ReadAllText(imageInfoPath);
-			var images = JsonConvert.DeserializeObject<List<Image>>(json);
+			var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+			var json = File.ReadAllText(imageInfoFilePath);
+			var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 			var characters = new List<string>();
 
 			foreach (var image in images)
@@ -251,7 +254,7 @@ namespace MegumiBot.Modules
 		}
 
 		[Command("yuboorustat")]
-		[Alias("yuboorustats")]
+		[Alias("yuboorustats", "ystat")]
 		public async Task YubooruStats(string stat, params string[] tags)
 		{
 			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
@@ -264,23 +267,79 @@ namespace MegumiBot.Modules
 			switch (stat.ToLower())
 			{
 				case "total":
-					var imageInfoPath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
-					var json = File.ReadAllText(imageInfoPath);
-					var images = JsonConvert.DeserializeObject<List<Image>>(json);
+					var imageInfoFilePath = Config.Bot.YubooruLocation + "\\ImageInfo.json";
+					var json = File.ReadAllText(imageInfoFilePath);
+					var images = JsonConvert.DeserializeObject<List<ImageInfo>>(json);
 
-					var matchingImages = new List<Image>();
+					var matchingimages = new List<ImageInfo>();
 
-					Search(tags, images, matchingImages);
+					Search(tags, images, matchingimages);
 
 					var tagsString = string.Join(" + ", tags);
 
-					await Context.Channel.SendMessageAsync($"Yubooru currently contains {matchingImages.Count} images of tags \"{tagsString}\"!");
+					await Context.Channel.SendMessageAsync($"Yubooru currently contains {matchingimages.Count} images of tags \"{tagsString}\"!");
 					break;
 
 				default:
 					await Context.Channel.SendMessageAsync("Unknown statistic!");
 					break;
 			}
+		}
+
+		[Command("imageinfo")]
+		public async Task ImageInfo()
+		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
+			var user = UserAccounts.GetAccount(Context.User);
+			if (user.LastYubooruImageInfo.Id == null)
+			{
+				await Context.Channel.SendMessageAsync("No image detected!");
+				return;
+			}
+
+			var artists = user.LastYubooruImageInfo.Artists != null ? string.Join("\n", user.LastYubooruImageInfo.Artists) : "";
+			var characters = user.LastYubooruImageInfo.Characters != null ? string.Join("\n", user.LastYubooruImageInfo.Characters) : "";
+			var copyrights = user.LastYubooruImageInfo.Copyrights != null ? string.Join("\n", user.LastYubooruImageInfo.Copyrights) : "";
+			var tags = user.LastYubooruImageInfo.Tags != null ? string.Join("\n", user.LastYubooruImageInfo.Tags) : "";
+
+			var artistTitle = artists != "" ? "**Artist**\n" : "";
+			var characterTitle = characters != "" ? "**Character**\n" : "";
+			var copyrightTitle = copyrights != "" ? "**Copyright**\n" : "";
+			var tagTitle = tags != "" ? "**Tag**\n" : "";
+
+			var embedTitle = "";
+			if (artists == "" && characters != "")
+				embedTitle = string.Join(" and ", characters);
+
+			else if (artists != "" && characters == "")
+				embedTitle = "Drawn by " + string.Join(" and ", artists);
+
+			else if (artists == "" && characters == "")
+				embedTitle = "Unknown";
+
+			else
+				embedTitle = $"{string.Join(" and ", characters)} drawn by {string.Join(" and ", artists)}";
+
+			var embed = new EmbedBuilder
+			{
+				Title = embedTitle,
+				Color = Color.Blue,
+				Description = $"{artistTitle}" +
+				              $"{artists}\n\n" +
+				              $"{characterTitle}" +
+				              $"{characters}\n\n" +
+				              $"{copyrightTitle}" +
+				              $"{copyrights}\n\n" +
+				              $"{tagTitle}" +
+				              $"{tags}"
+			};
+
+			await Context.Channel.SendMessageAsync("", embed: embed);
 		}
 	}
 }

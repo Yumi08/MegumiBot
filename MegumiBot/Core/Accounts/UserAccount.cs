@@ -1,4 +1,5 @@
 ﻿using System;
+using YubooruCollectionManager.Files;
 
 namespace MegumiBot.Core.Accounts
 {
@@ -33,5 +34,10 @@ namespace MegumiBot.Core.Accounts
 		/// The total messages this user has sent anywhere.
 		/// </summary>
 		public uint TotalMessages { get; set;}
+
+		/// <summary>
+		/// Info about the last Image the user called from Yubooru
+		/// </summary>
+		public ImageInfo LastYubooruImageInfo { get; set; }
 	}
 }
