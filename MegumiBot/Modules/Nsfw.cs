@@ -302,10 +302,22 @@ namespace MegumiBot.Modules
 				return;
 			}
 
-			var artists = user.LastYubooruImageInfo.Artists != null ? string.Join("\n", user.LastYubooruImageInfo.Artists) : "";
-			var characters = user.LastYubooruImageInfo.Characters != null ? string.Join("\n", user.LastYubooruImageInfo.Characters) : "";
-			var copyrights = user.LastYubooruImageInfo.Copyrights != null ? string.Join("\n", user.LastYubooruImageInfo.Copyrights) : "";
-			var tags = user.LastYubooruImageInfo.Tags != null ? string.Join("\n", user.LastYubooruImageInfo.Tags) : "";
+			var artistList = user.LastYubooruImageInfo.Artists;
+			artistList.Sort();
+
+			var characterList = user.LastYubooruImageInfo.Artists;
+			characterList.Sort();
+
+			var copyrightList = user.LastYubooruImageInfo.Copyrights;
+			copyrightList.Sort();
+
+			var tagList = user.LastYubooruImageInfo.Tags;
+			tagList.Sort();
+
+			var artists = user.LastYubooruImageInfo.Artists != null ? string.Join("\n", artistList) : "";
+			var characters = user.LastYubooruImageInfo.Characters != null ? string.Join("\n", characterList) : "";
+			var copyrights = user.LastYubooruImageInfo.Copyrights != null ? string.Join("\n", copyrightList) : "";
+			var tags = user.LastYubooruImageInfo.Tags != null ? string.Join("\n", tagList) : "";
 
 			var artistTitle = artists != "" ? "**Artist**\n" : "";
 			var characterTitle = characters != "" ? "**Character**\n" : "";
