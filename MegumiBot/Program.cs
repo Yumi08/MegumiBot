@@ -34,6 +34,7 @@ namespace MegumiBot
 		        _clientIsReady = true;
 		        return Task.CompletedTask;
 	        };
+	        _client.Disconnected += OnDisconnected;
             await _client.LoginAsync(TokenType.Bot, Config.Bot.Token);
             await _client.StartAsync();
             Global.Client = _client;
@@ -47,6 +48,18 @@ namespace MegumiBot
 	    private async Task Log(LogMessage msg)
 	    {
 		    Console.WriteLine(msg.Message);
+	    }
+
+	    private async Task OnDisconnected(Exception e)
+	    {
+		    await Task.Delay(7500);
+
+		    if (_client.ConnectionState != ConnectionState.Disconnected) return;
+
+		    Console.WriteLine("OnDisconnected(): Attempting to reconnect...");
+
+		    await _client.LogoutAsync();
+		    await _client.LoginAsync(TokenType.Bot, Config.Bot.Token);
 	    }
 
 		#region Console Commands

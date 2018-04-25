@@ -25,7 +25,7 @@ namespace MegumiBot.Modules
 			var embed = new EmbedBuilder();
 			var url = searchResult.neko.ToString();
 			embed.WithImageUrl(url);
-            embed.WithTitle($"Neko for {Global.GetNickname(Context.User as IGuildUser)} !");
+            embed.WithTitle($"Neko for {Global.GetNickname((IGuildUser)Context.User)}!");
 			embed.WithAuthor("Source : Nekos.life");
             embed.WithFooter($"Timestamp : {timestamp} GMT-5 ");
 			embed.WithColor(255, 0, 255);
