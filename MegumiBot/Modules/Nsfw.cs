@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -14,6 +16,8 @@ namespace MegumiBot.Modules
 {
 	public class Nsfw : ModuleBase<SocketCommandContext>
 	{
+		#region Yubooru
+
 		private static void Search(string[] tags, List<ImageInfo> images, List<ImageInfo> matchingimages)
 		{
 			foreach (var image in images)
@@ -37,7 +41,6 @@ namespace MegumiBot.Modules
 				if (matches == tags.Length) matchingimages.Add(image);
 			}
 		}
-
 
 		/// <summary>
 		/// Get a lewd image on Yumi08's personal hentai collection ;>
@@ -361,6 +364,35 @@ namespace MegumiBot.Modules
 			};
 
 			await Context.Channel.SendMessageAsync("", embed: embed);
+		}
+
+		#endregion
+
+		[Command("lewdneko")]
+		public async Task LewdNeko()
+		{
+			if (!Guilds.GetGuild(Context.Guild).GetChannel(Context.Channel).IsNsfw)
+			{
+				await Context.Channel.SendMessageAsync("Th-That's for NSFW channels! You lewdie!!!");
+				return;
+			}
+
+			string json;
+			using (var client = new WebClient())
+			{
+				json = client.DownloadString("https://nekos.life/api/lewd/neko");
+			}
+
+			string timestamp = System.DateTime.Now.ToString(CultureInfo.InvariantCulture);
+			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
+			var embed = new EmbedBuilder();
+			var url = searchResult.neko.ToString();
+			embed.WithImageUrl(url);
+			embed.WithTitle($"Neko for {Global.GetNickname(Context.User as IGuildUser)} !");
+			embed.WithAuthor("Source : Nekos.life");
+			embed.WithFooter($"Timestamp : {timestamp} GMT-5 ");
+			embed.WithColor(255, 0, 255);
+			await Context.Channel.SendMessageAsync("", false, embed);
 		}
 	}
 }

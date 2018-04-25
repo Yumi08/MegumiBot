@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Discord;
@@ -10,7 +11,6 @@ namespace MegumiBot.Modules
 {
 	public class Fun : ModuleBase<SocketCommandContext>
 	{
-		// Not actually nsfw, just to test the NSFW checker
 		[Command("neko")]
 		public async Task Neko()
 		{
@@ -20,7 +20,7 @@ namespace MegumiBot.Modules
 				json = client.DownloadString("https://nekos.life/api/neko");
 			}
 
-            string timestamp = System.DateTime.Now.ToString();
+            string timestamp = System.DateTime.Now.ToString(CultureInfo.InvariantCulture);
 			var searchResult = JsonConvert.DeserializeObject<dynamic>(json);
 			var embed = new EmbedBuilder();
 			var url = searchResult.neko.ToString();
