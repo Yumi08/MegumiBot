@@ -10,7 +10,7 @@ namespace MegumiBot.Modules
 	public class Test : ModuleBase<SocketCommandContext> //usefull commands should be transfered to the command class when done.
 	{
         [Command("echo")]
-		public async Task Echo(string input)
+		public async Task Echo([Remainder] string input)
 		{
 			await Context.Channel.SendMessageAsync(input);
 		}

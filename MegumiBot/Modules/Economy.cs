@@ -27,6 +27,25 @@ namespace MegumiBot.Modules
 			await Context.Channel.SendMessageAsync("", embed: embed);
 		}
 
+		[Command("profile")]
+		public async Task Profile(IUser user)
+		{
+			var userAccount = UserAccounts.GetAccount(user);
+
+			var embed = new EmbedBuilder
+			{
+				Title = $"{Global.GetNickname(Context.User as IGuildUser)}'s Profile",
+				Color = new Color(135, 229, 197)
+			};
+
+			embed.AddInlineField("Level", userAccount.LevelNumber);
+			embed.AddInlineField("XP", userAccount.Xp);
+			embed.AddInlineField("Money", $"{Config.Bot.CurrencySymbol}{userAccount.Currency}");
+			embed.AddInlineField("Messages", userAccount.TotalMessages);
+
+			await Context.Channel.SendMessageAsync("", embed: embed);
+		}
+
 		[Command("bet")]
 		public async Task Bet(uint amt)
 		{
